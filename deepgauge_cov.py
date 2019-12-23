@@ -1,6 +1,7 @@
 import numpy as np
 import copy
 
+
 def get_boundary(neuron_value, number_of_neuron):
     """
     对于当前所有样本的神经元输出值neuron_value， 从中找到每个神经元的最大值和最小值
