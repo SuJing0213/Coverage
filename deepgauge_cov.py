@@ -1,5 +1,6 @@
 import numpy as np
 import copy
+import math
 
 
 def get_boundary(neuron_value, number_of_neuron):
@@ -15,7 +16,7 @@ def get_boundary(neuron_value, number_of_neuron):
     for i in range(number_of_neuron):
         dic = {"max": max_value[i], "min": min_value[i]}
         boundary.append(dic)
-
+    print(boundary)
     return boundary
 
 
@@ -27,6 +28,7 @@ def nbcov_and_snacov(neuron_value, number_of_neuron, boundary):
     :param boundary:
     :return: NBCov, SNACov
     """
+    print("------开始计算神经元边界覆盖率和强神经元激活覆盖率------")
     count_upper = 0
     count_lower = 0
     for i in range(number_of_neuron):
@@ -40,7 +42,8 @@ def nbcov_and_snacov(neuron_value, number_of_neuron, boundary):
                 lower_flag = 1
             if upper_flag == 1 and lower_flag == 1:
                 break
-    return (count_upper + count_lower)/(2*number_of_neuron), count_upper/number_of_neuron
+    print("------计算神经元边界覆盖率和强神经元激活覆盖率结束------")
+    return (count_upper + count_lower) / (2 * number_of_neuron), count_upper / number_of_neuron
 
 
 def k_multisection_neuron_coverage(neuron_value, number_of_neuron, boundary, number_of_section):
@@ -53,28 +56,35 @@ def k_multisection_neuron_coverage(neuron_value, number_of_neuron, boundary, num
     :return:
     """
     # 从训练集得到神经元出现过的最大最小值
+    print("------开始计算神经元k分覆盖率和强神经元激活覆盖率------")
     k_section_bound = []
     for i in range(number_of_neuron):
-        temp = [boundary[i][min]]
-        delta = (boundary[i][max] - boundary[i][min])/number_of_section
-        k_bound = boundary[i][min]
+        temp = [float(boundary[i]["min"])]
+        delta = (boundary[i]["max"] - boundary[i]["min"]) / number_of_section
+        #        print(delta)
+        k_bound = boundary[i]["min"]
         for _ in range(number_of_section):
             k_bound += delta
             temp.append(k_bound)
         k_section_bound.append(temp)
+    print(k_section_bound)
 
-    count_k_section = [0 for i in range(number_of_section)]
-    flag_k_section = [0 for i in range(number_of_section)]
+    count_k_section = [[0 for _ in range(number_of_section)] for __ in range(len(neuron_value))]
+    flag_k_section = [[0 for _ in range(number_of_section)] for __ in range(len(neuron_value))]
     for i in range(number_of_neuron):
         for example in neuron_value:
+            print("example[%d] = %f" % (i, example[i]))
             for k in range(number_of_section):
-                if k_section_bound[k] <= example[i] <= k_section_bound[k+1] and flag_k_section[k] == 0:
-                    flag_k_section[k] = 1
-                    count_k_section[k] += 1
-                    break
-            if 0 not in flag_k_section:
+                if k_section_bound[i][k] <= example[i] <= k_section_bound[i][k + 1] and flag_k_section[i][k] == 0:
+                    flag_k_section[i][k] = 1
+                    count_k_section[i][k] += 1
+                    print(count_k_section)
                 break
-    return sum(count_k_section)/(number_of_section*number_of_neuron)
+                
+
+            print(count_k_section)
+    print("------计算神经元k分覆盖率和强神经元激活覆盖率结束------")
+    return sum(count_k_section) / (number_of_section * number_of_neuron)
 
 
 def top_k_neuron_cov(neuron_value, number_of_neuron_layer, k_value):
@@ -95,15 +105,18 @@ def top_k_neuron_cov(neuron_value, number_of_neuron_layer, k_value):
                 top_k_neuron_index[max_index] = 1
             elif top_k_neuron_index[max_index] == 1 and j == k_value - 1:
                 break
-    return sum(top_k_neuron_index)/number_of_neuron_layer
+    return sum(top_k_neuron_index) / number_of_neuron_layer
 
 
 if __name__ == "__main__":
+    neuron_value_train = [[0.9, 0.8, 0, 0.1],
+                          [0.3, 0.9, 0, 0.7],
+                          [0.2, 0.3, 0.9, 0.3],
+                          [0.4, 0.2, 0, 0.5]]
+    neuron_value_test = [[0, 0.75, 0, 0.25],
+                         [1, 0.26, 0, 0.33],
+                         [0.2, 0, 1, 0.55]]
 
-    layer_neuron_value = [[9, 1, 1, 1, 2, 1],
-                          [1, 9, 1, 2, 1, 1],
-                          [1, 2, 9, 1, 1, 1],
-                          [2, 1, 1, 9, 1, 1]]
-    cov_result = top_k_neuron_cov(layer_neuron_value, 6, 2)
-    print(cov_result)
-    print(layer_neuron_value)
+    nb_cov, sna_cov = nbcov_and_snacov(neuron_value_test, 4, get_boundary(neuron_value_train, 4))
+    k_multi_cov = k_multisection_neuron_coverage(neuron_value_test, 4, get_boundary(neuron_value_train, 4), 2)
+    print("nb_cov = %f, sna_cov = %f, k_multi_cov = %f" % (nb_cov, sna_cov, k_multi_cov))

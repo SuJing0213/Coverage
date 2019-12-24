@@ -150,6 +150,6 @@ def main(test_data, test_label, train_data, train_label, command=None):
         return
 
 
-if __name__ == "__main__":
-    ted, tel, trd, trl = load_data()
-    main(ted, tel, trd, trl, "test")
+# if __name__ == "__main__":
+#     ted, tel, trd, trl = load_data()
+#     main(ted, tel, trd, trl, "test")
