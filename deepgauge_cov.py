@@ -69,22 +69,20 @@ def k_multisection_neuron_coverage(neuron_value, number_of_neuron, boundary, num
         k_section_bound.append(temp)
     print(k_section_bound)
 
-    count_k_section = [[0 for _ in range(number_of_section)] for __ in range(len(neuron_value))]
-    flag_k_section = [[0 for _ in range(number_of_section)] for __ in range(len(neuron_value))]
+    count_k_section = 0.0
     for i in range(number_of_neuron):
+        flag_k_section = [0 for _ in range(number_of_section)]
         for example in neuron_value:
-            print("example[%d] = %f" % (i, example[i]))
+            print("example = ", example)
             for k in range(number_of_section):
-                if k_section_bound[i][k] <= example[i] <= k_section_bound[i][k + 1] and flag_k_section[i][k] == 0:
-                    flag_k_section[i][k] = 1
-                    count_k_section[i][k] += 1
-                    print(count_k_section)
+                if k_section_bound[i][k] < example[i] <= k_section_bound[i][k + 1] and flag_k_section[k] == 0:
+                    flag_k_section[k] = 1
+                    count_k_section += 1
+            if 0 not in flag_k_section:
                 break
-                
-
-            print(count_k_section)
+    print(count_k_section)
     print("------计算神经元k分覆盖率和强神经元激活覆盖率结束------")
-    return sum(count_k_section) / (number_of_section * number_of_neuron)
+    return count_k_section / (number_of_section * number_of_neuron)
 
 
 def top_k_neuron_cov(neuron_value, number_of_neuron_layer, k_value):
@@ -117,6 +115,7 @@ if __name__ == "__main__":
                          [1, 0.26, 0, 0.33],
                          [0.2, 0, 1, 0.55]]
 
-    nb_cov, sna_cov = nbcov_and_snacov(neuron_value_test, 4, get_boundary(neuron_value_train, 4))
+    # nb_cov, sna_cov = nbcov_and_snacov(neuron_value_test, 4, get_boundary(neuron_value_train, 4))
     k_multi_cov = k_multisection_neuron_coverage(neuron_value_test, 4, get_boundary(neuron_value_train, 4), 2)
-    print("nb_cov = %f, sna_cov = %f, k_multi_cov = %f" % (nb_cov, sna_cov, k_multi_cov))
+    print(k_multi_cov)
+    # print("nb_cov = %f, sna_cov = %f, k_multi_cov = %f" % (nb_cov, sna_cov, k_multi_cov))
