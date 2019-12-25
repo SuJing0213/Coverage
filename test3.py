@@ -5,5 +5,9 @@
 # bound = get_boundary(tr_n_v, 3)
 # print(bound)
 
-bi_neuron_value_activate = [[0 for _ in range(3)] for __ in range(4)]
-print(bi_neuron_value_activate)
+# bi_neuron_value_activate = [[0 for _ in range(3)] for __ in range(4)]
+# print(bi_neuron_value_activate)
+
+list1 = [[]]
+list2 = [[4, 5, 6]]
+print(list1 + list2)

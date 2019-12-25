@@ -19,15 +19,15 @@ def get_neural_value(source_path, result_path, tensor_name, number_of_value):
     label = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
     sess = tf.Session()
-    saver = tf.train.import_meta_graph(r'C:\Users\zz\Myproject\Mnist\Model\model.ckpt.meta')
-    saver.restore(sess, r"C:\Users\zz\Myproject\Mnist\Model\model.ckpt")
+    saver = tf.train.import_meta_graph(r'Model\model.ckpt.meta')
+    saver.restore(sess, r"Model\model.ckpt")
     graph = tf.get_default_graph()
     x = graph.get_tensor_by_name("x:0")
     y_ = graph.get_tensor_by_name("y_:0")
 
     with open(result_path, 'w') as result_file:
-        for k in range(len(images)):
-            picture = np.array(images[k]).reshape(1, 28, 28, 1)
+        for image in images:
+            picture = np.array(image).reshape(1, 28, 28, 1)
             feed_dict = {x: picture, y_: label}
             tensor = graph.get_tensor_by_name(tensor_name)
             layer_output = sess.run(tensor, feed_dict)
@@ -37,31 +37,50 @@ def get_neural_value(source_path, result_path, tensor_name, number_of_value):
             print("\n", file=result_file)
 
 
-# ------------------------------------------训练集神经元输出----------------------------------------------------
-# 计算预测正确训练集图片的神经元输出
-for i in range(10):
-    Source_path = r'C:\Users\zz\Myproject\Mnist\MNIST_data\training_data\class' + str(i) + \
-                  '_correct_prediction.txt'
+if __name__ == "__main__":
 
-    # # 第一个池化层的输出
-    # Result_path = r'C:\Users\Myproject\LeNet5\MNIST_data\training_data\correct_neural_value\conv_1\class' + \
-    #               str(i) + '_correct_NeuralValue.txt'
-    # get_neural_value(source_path=Source_path, result_path=Result_path, tensor_name="conv1:0", number_of_value=14*14*32
-    #
-    # # 第二个池化层的输出
-    # Result_path = r'C:\Users\Myproject\LeNet5\MNIST_data\training_data\correct_neural_value\conv_2\class' + \
-    #               str(i) + '_correct_NeuralValue.txt'
-    # get_neural_value(source_path=Source_path, result_path=Result_path, tensor_name="conv2:0", number_of_value=7*7*64)
+    for i in range(10):
+        Source_path = r'MNIST_data\testing_data\test_images_class_' + str(i) + '.txt'
 
-    # 第五层全连接层输出
-    Result_path = r'C:\Users\zz\Myproject\Mnist\MNIST_data\training_data\correct_neural_value\fc1\class' + \
-                  str(i) + '_correct_NeuralValue.txt'
-    get_neural_value(source_path=Source_path, result_path=Result_path, tensor_name="layer5-fc1/fc1:0", number_of_value=256)
+        # 第一层卷积的输出
+        Result_path = r'MNIST_data\testing_data\all_neural_value\conv_1\class_' + \
+                      str(i) + '_NeuralValue.txt'
+        get_neural_value(source_path=Source_path, result_path=Result_path,
+                         tensor_name="layer1-conv1/conv1:0", number_of_value=28*28*6)
 
-    # 第六层全连接层输出
-    Result_path = r'C:\Users\zz\Myproject\Mnist\MNIST_data\training_data\correct_neural_value\fc2\class' + \
-                  str(i) + '_correct_NeuralValue.txt'
-    get_neural_value(source_path=Source_path, result_path=Result_path, tensor_name="layer6-fc2/fc2:0", number_of_value=128)
+        # 第二层池化层的输出
+        # Result_path = r'C:\Users\Myproject\LeNet5\MNIST_data\training_data\correct_neural_value\conv_2\class' + \
+        #               str(i) + '_correct_NeuralValue.txt'
+        # get_neural_value(source_path=Source_path, result_path=Result_path, tensor_name="conv2:0", number_of_value=7*7*64)
+
+        # 第五层全连接层输出
+        # Result_path = r'C:\Users\zz\Myproject\Mnist\MNIST_data\training_data\correct_neural_value\fc1\class' + \
+        #               str(i) + '_correct_NeuralValue.txt'
+        # get_neural_value(source_path=Source_path, result_path=Result_path, tensor_name="layer5-fc1/fc1:0", number_of_value=256)
+        #
+        # # 第六层全连接层输出
+        # Result_path = r'C:\Users\zz\Myproject\Mnist\MNIST_data\training_data\correct_neural_value\fc2\class' + \
+        #               str(i) + '_correct_NeuralValue.txt'
+        # get_neural_value(source_path=Source_path, result_path=Result_path, tensor_name="layer6-fc2/fc2:0", number_of_value=128)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,10 +1,18 @@
 <component name="ProjectDictionaryState">
   <dictionary name="zz">
     <words>
+      <w>batchsize</w>
+      <w>ckpt</w>
+      <w>conv</w>
       <w>deepgauge</w>
       <w>deepxplore</w>
+      <w>fpath</w>
+      <w>logit</w>
+      <w>mnist</w>
       <w>multisection</w>
       <w>nbcov</w>
+      <w>numlist</w>
+      <w>regularizer</w>
       <w>snacov</w>
       <w>xplore</w>
     </words>

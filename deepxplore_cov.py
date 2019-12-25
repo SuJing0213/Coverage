@@ -1,6 +1,7 @@
+from input_data import load_neural_value
+
+
 # neuron_coverage in DeepXplore
-
-
 def neuron_coverage(neuron_value, neuron_num, activate_bound):
     """
     以一定的激活阈值，计算样本集合的神经元激活覆盖率
@@ -9,19 +10,27 @@ def neuron_coverage(neuron_value, neuron_num, activate_bound):
     :param activate_bound: 激活阈值
     :return:
     """
-    print("------开始计算神经元覆盖率------")
+    print("开始计算神经元覆盖率...")
     activated_num = 0.0
     for i in range(neuron_num):
         for example in neuron_value:
             if example[i] > activate_bound:
                 activated_num += 1
                 break
-    print("------神经元覆盖率计算结束------")
+    print("神经元覆盖率计算结束!")
     return activated_num / neuron_num
 
 
-# if __name__ == '__main__':
-#     neuron_value_test = [[0, 0.75, 0, 0], [0, 0.26, 0, 0.49], [0.2, 0, 0.76, 0], [0, 0, 0, 0]]
-#     act_bound = 0.25
-#     cov = neuron_coverage(neuron_value_test, 4, act_bound)
-#     print("active_bound = %f cov = %f" % (act_bound, cov))
+if __name__ == '__main__':
+
+    neuron_value_list = []
+    for i in range(10):
+        source_path = r"MNIST_data/testing_data/all_neural_value/conv_1/class_" + str(i) + "_NeuralValue.txt"
+        neuron_number = 28*28*6
+        temp_neuron_value = load_neural_value(source_path, neuron_number)
+        for example in temp_neuron_value:
+            neuron_value_list.append(example)
+        # neuron_value_test = [[0, 0.75, 0, 0], [0, 0.26, 0, 0.49], [0.2, 0, 0.76, 0], [0, 0, 0, 0]]
+    act_bound = 0.25
+    cov = neuron_coverage(neuron_value_list, 28*28*6, act_bound)
+    print("active_bound = %f cov = %f" % (act_bound, cov))
